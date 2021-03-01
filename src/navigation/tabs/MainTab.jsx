@@ -14,57 +14,41 @@ const mainTab = () => {
         name={SCREEN.rectangle}
         component={Painter}
         initialParams={{ shapeType: 4 }}
-        screenOptions={() => ({
+        options={() => ({
           tabBarIcon: () => {
             return <Image style={{ height: 20, width: 20 }} source={require('../../assets/images/square.png')} />;
           },
         })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'gray',
-        }}
       />
       <Tab.Screen
         name={SCREEN.circle}
         component={Painter}
         initialParams={{ shapeType: 0 }}
-        screenOptions={() => ({
+        options={() => ({
           tabBarIcon: () => {
             return <Image style={{ height: 20, width: 20 }} source={require('../../assets/images/circle.jpg')} />;
           },
         })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'gray',
-        }}
       />
       <Tab.Screen
         name={SCREEN.triangle}
         component={Painter}
         initialParams={{ shapeType: 3 }}
-        screenOptions={() => ({
+        options={() => ({
           tabBarIcon: () => {
             return <Image style={{ height: 20, width: 20 }} source={require('../../assets/images/triangle.png')} />;
           },
         })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'gray',
-        }}
       />
       <Tab.Screen
         name={SCREEN.home}
         component={Painter}
         initialParams={{ shapeType: -1 }}
-        screenOptions={() => ({
+        options={() => ({
           tabBarIcon: () => {
             return <Image style={{ height: 20, width: 20 }} source={require('../../assets/images/all.png')} />;
           },
         })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'gray',
-        }}
       />
     </Tab.Navigator>
   );

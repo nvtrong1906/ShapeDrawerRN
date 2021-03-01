@@ -25,24 +25,24 @@ const Painter = ({ route, navigation }) => {
     let lastY = 0;
     let lastZ = 0;
 
-    // const acceSensor = Sensors['accelerometer'];
-    // const subscription = acceSensor
-    //   .subscribe(
-    //     ({ x, y, z, timestamp }) => {
-    //       if (lastTime === 0) {
-    //         lastTime = timestamp;
-    //         lastX = x;
-    //         lastY = y;
-    //         lastZ = z;
-    //       } else {
-    //         if (Math.abs(x, lastX) > 5 || Math.abs(y, lastY) > 5 || Math.abs(z, lastZ) > 5) {
-    //           setShapes([])
-    //         }
-    //       }
-    //     }
-    //   );
+    const acceSensor = Sensors['accelerometer'];
+    const subscription = acceSensor
+      .subscribe(
+        ({ x, y, z, timestamp }) => {
+          if (lastTime === 0) {
+            lastTime = timestamp;
+            lastX = x;
+            lastY = y;
+            lastZ = z;
+          } else {
+            if (Math.abs(x, lastX) > 5 || Math.abs(y, lastY) > 5 || Math.abs(z, lastZ) > 5) {
+              setShapes([])
+            }
+          }
+        }
+      );
 
-    // setSensor(subscription);
+    setSensor(subscription);
     return () => {
       !!sensor && sensor.unsubscribe();
       setSensor(null);

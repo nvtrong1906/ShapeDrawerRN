@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, TouchableWithoutFeedback, View } from 'react-native';
+import { Dimensions, TouchableWithoutFeedback, View, Animated, PanResponder } from 'react-native';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -17,9 +17,11 @@ const {
 } = CONSTANTS;
 
 const screenWidth = Dimensions.get('screen').width;
-const randomSize = Utils.randomIntFromInterval(10, 45);
 
 const Shapes = ({ shapeType, nativeEvent }) => {
+  const [randomSize, setRandomSize] = useState(10);
+  const [pan, setPan] = useState(new Animated.ValueXY());
+  const [panResponder, setPanResponder] = useState({});
   const locationX = !nativeEvent.locationX ? _.get(nativeEvent, ['changedTouches', '1', 'locationX']) : nativeEvent.locationX;
   const locationY = !nativeEvent.locationX ? _.get(nativeEvent, ['changedTouches', '1', 'locationY']) : nativeEvent.locationY;
 
@@ -30,8 +32,32 @@ const Shapes = ({ shapeType, nativeEvent }) => {
   let lastTime = new Date();
   let timer = false;
 
+
   useEffect(() => {
     getFilledElement(currentShapeType);
+    setRandomSize(Utils.randomIntFromInterval(10, 45));
+    let val = {
+      x: 0,
+      y: 0,
+    }
+    pan.addListener((value) => {
+      val = value
+    });
+    setPanResponder(PanResponder.create({
+      onStartShouldSetPanResponder: (e, gesture) => true,
+      onPanResponderGrant: (e, gesture) => {
+        this.state.pan.setOffset({
+          x: val.x,
+          y: val.y
+        })
+        this.state.pan.setValue({ x: 0, y: 0 })
+      },
+      onPanResponderMove: Animated.event([
+        null, { dx: val.x, dy: val.y }
+      ]),
+      onPanResponderRelease: (e, gesture) => {
+      }
+    }));
   }, [])
 
   renderShape = () => {
@@ -39,9 +65,9 @@ const Shapes = ({ shapeType, nativeEvent }) => {
     return (
       <Component
         styles={{
-          position: 'absolute',
-          top: locationY - (screenWidth * randomSize / 100 / 2),
-          left: locationX - (screenWidth * randomSize / 100 / 2),
+          // position: 'absolute',
+          // top: locationY - (screenWidth * randomSize / 100 / 2),
+          // left: locationX - (screenWidth * randomSize / 100 / 2),
           width: screenWidth * randomSize / 100,
         }}
         color={`#${filledElement}`}
@@ -123,11 +149,22 @@ const Shapes = ({ shapeType, nativeEvent }) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={onComponentPress}>
-      <View>
-        {renderShape()}
-      </View>
-    </TouchableWithoutFeedback>
+    <Animated.View
+      {...panResponder.panHandlers}
+      style={[
+        { transform: pan.getTranslateTransform() },
+        {
+          position: 'absolute',
+          top: locationY - (screenWidth * randomSize / 100 / 2),
+          left: locationX - (screenWidth * randomSize / 100 / 2),
+        }]}
+    >
+      <TouchableWithoutFeedback onPress={onComponentPress}>
+        <View>
+          {renderShape()}
+        </View>
+      </TouchableWithoutFeedback>
+    </Animated.View >
   );
 }
 
